@@ -20,14 +20,14 @@ The tools I used for this project include, Python, SQLite and Perl.
 # Exploratory Data Analysis (EDA)
 
 ## Price and Sentiment Visualizations
-![image caption](/home/fwilliams/GitHub/MSDS692/images/ADA.png)   ![image caption](/home/fwilliams/GitHub/MSDS692/images/BCH.png)
-![image caption](/home/fwilliams/GitHub/MSDS692/images/BTC.png)   ![image caption](/home/fwilliams/GitHub/MSDS692/images/EOS.png)
-![image caption](/home/fwilliams/GitHub/MSDS692/images/ETH.png)   ![image caption](/home/fwilliams/GitHub/MSDS692/images/LTC.png)
-![image caption](/home/fwilliams/GitHub/MSDS692/images/MIOTA.png) ![image caption](/home/fwilliams/GitHub/MSDS692/images/TRX.png)
-![image caption](/home/fwilliams/GitHub/MSDS692/images/XLM.png)   ![image caption](/home/fwilliams/GitHub/MSDS692/images/XRP.png)
+![image caption](images/ADA.png)   ![image caption](images/BCH.png)
+![image caption](images/BTC.png)   ![image caption](images/EOS.png)
+![image caption](images/ETH.png)   ![image caption](images/LTC.png)
+![image caption](images/MIOTA.png) ![image caption](images/TRX.png)
+![image caption](images/XLM.png)   ![image caption](images/XRP.png)
 
 ## CoinMarketCap Visualizations
-![image caption](/home/fwilliams/GitHub/MSDS692/images/cmc_correlation.png)
+![image caption](images/cmc_correlation.png)
 
 ### Correlation Matrix - CoinMarketCap
 
