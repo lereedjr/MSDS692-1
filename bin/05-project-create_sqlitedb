@@ -1,0 +1,188 @@
+#!/bin/bash
+
+set -x
+
+#-------------------------------------------------------------------------------
+# Developer : Fredrick Williams
+#
+# Class     : MDS692 Data Science Practicum
+#
+# Instructor: Dr. Nathan C George
+#
+# Script    : 05-project-create_sqlitedb
+#
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#                              GLOBAL VARIABLES
+#-------------------------------------------------------------------------------
+#=======================================
+# Environment
+#=======================================
+date_time=`date +%Y%m%d%H%M%S`
+today=`date +%Y%m%d`
+status=0
+
+#=======================================
+# Directories
+#=======================================
+top_dir="/home/fwilliams"
+projects_dir="${top_dir}/Projects"
+class_dir="${projects_dir}/MSDS692"
+reports_dir="${class_dir}/Practicum/reports"
+
+cryptocurrencies_dir="${reports_dir}/data/coinmarketcap/cryptocurrencies"
+prices_dir="${reports_dir}/data/coinmarketcap/prices"
+sentiments_dir="${reports_dir}/data/twitter/sentiments"
+
+db_dir="${reports_dir}/db"
+
+log_dir="${class_dir}/Practicum/log"
+scripts_dir="${class_dir}/Practicum/scripts.3"
+
+#=======================================
+# Files
+#=======================================
+load_cryptocurrencies="${scripts_dir}/load_cryptocurrencies.py"
+load_prices="${scripts_dir}/load_prices.py"
+load_sentiments="${scripts_dir}/load_sentiments.py"
+
+#cryptocurrencies_csv_file=`ls /home/fwilliams/Projects/MSDS692/Practicum/reports/data/coinmarketcap/cryptocurrencies/cryptocurrencies.csv.* | tail -1`
+#prices_csv_file=`ls /home/fwilliams/Projects/MSDS692/Practicum/reports/data/coinmarketcap/prices/prices.csv.* | tail -1`
+#sentiments_csv_file=`ls /home/fwilliams/Projects/MSDS692/Practicum/reports/data/twitter/sentiments/sentiments.csv.* | tail -1`
+
+cryptocurrencies_csv_file=`ls ${cryptocurrencies_dir}/cryptocurrencies.csv.* | tail -1`
+prices_csv_file=`ls ${prices_dir}/prices.csv.* | tail -1`
+sentiments_csv_file=`ls ${sentiments_dir}/sentiments.csv.* | tail -1`
+
+db_file="${reports_dir}/db/msds692.db"
+
+log_file="${log_dir}/create_sqlitedb.log.${date_time}"
+
+#-------------------------------------------------------------------------------
+#                                 FUNCTIONS
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+# Function    : create_sqlitedb
+#
+# Arguments   : None
+#
+# Return Value: Integer - Exit status
+#
+# Description : Create all data csv files.
+#
+# Notes       : This function calls all the scripts that load the csv data 
+#               files into a SQLite database.
+#
+#-------------------------------------------------------------------------------
+function create_sqlitedb
+{
+  #=====================================
+  # Local variables
+  #=====================================
+  local status=0
+
+  # Load cryptocurrencies data csv file.
+  #echo "Loading cryptocurrencies table."
+  load_file=${cryptocurrencies_csv_file}
+  load_file=${load_file##*/}
+  echo "Loading ${load_file} into cryptocurrencies table."
+  python ${load_cryptocurrencies} ${cryptocurrencies_csv_file} ${db_file} 
+  status=$?
+  if [[ ${status} -ne 0 ]]; then
+    echo "${load_cryptocurrencies}: Error detected while loading cryptocurrencies data csv file."
+    return ${status}
+  fi
+
+  # Load prices data csv file.
+  #echo "Loading prices table."
+  load_file=${prices_csv_file}
+  load_file=${load_file##*/}
+  echo "Loading ${load_file} into prices table."
+  python ${load_prices} ${prices_csv_file} ${db_file} 
+  status=$?
+  if [[ ${status} -ne 0 ]]; then
+    echo "${load_prices}: Error detected while loading prices data csv file."
+    return ${status}
+  fi
+
+  # Load sentiments data csv file.
+  #echo "Loading sentiments table."
+  load_file=${sentiments_csv_file}
+  load_file=${load_file##*/}
+  echo "Loading ${load_file} into prices table."
+  python ${load_sentiments} ${sentiments_csv_file} ${db_file} 
+  status=$?
+  if [[ ${status} -ne 0 ]]; then
+    echo "${load_sentiments}: Error detected while loading sentiments data csv file."
+    return ${status}
+  fi
+
+  #=====================================
+  # Return
+  #=====================================
+  echo ${status}
+}
+
+#-------------------------------------------------------------------------------
+# Function    : main
+#
+# Arguments   : None
+#
+# Return Value: Integer - Exit status
+#
+# Description : Control function.
+#
+# Notes       :
+#
+#-------------------------------------------------------------------------------
+function main
+{
+  #=====================================
+  # Local variables
+  #=====================================
+  local status=0
+
+  echo "Executing scripts that load cryptocurrencies, prices and sentiments data csv files into a SQLite database."
+  create_sqlitedb > ${log_file} 2>&1
+  status=$?
+  if [[ ${status} -ne 0 ]]; then
+    echo "Detected error while executing create_sqlitedb function."
+    exit ${status}
+  fi
+
+  #=====================================
+  # Return
+  #=====================================
+  echo ${status}
+}
+
+#-------------------------------------------------------------------------------
+#                                    MAIN
+#-------------------------------------------------------------------------------
+#=======================================
+# Run program
+#=======================================
+main
+
+status=$?
+
+#=======================================
+#  Exit program with exit status.
+#=======================================
+exit ${status}
+
+
+
+#-------------------------------------------------------------------------------
+#                                EXAMPLE RUNS
+#-------------------------------------------------------------------------------
+
+
+
+
+
+#-------------------------------------------------------------------------------
+#                                 REFERENCES
+#-------------------------------------------------------------------------------
+

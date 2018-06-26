@@ -1,0 +1,158 @@
+#!/bin/bash
+
+set -x
+
+#-------------------------------------------------------------------------------
+# Developer : Fredrick Williams
+#
+# Class     : MDS692 Data Science Practicum
+#
+# Instructor: Dr. Nathan C George
+#
+# Script    : 04-project-create_all_csv_data_files
+#
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#                              GLOBAL VARIABLES
+#-------------------------------------------------------------------------------
+#=======================================
+# Environment
+#=======================================
+date_time=`date +%Y%m%d%H%M%S`
+today=`date +%Y%m%d`
+status=0
+
+#=======================================
+# Directories
+#=======================================
+top_dir="/home/fwilliams"
+projects_dir="${top_dir}/Projects"
+class_dir="${projects_dir}/MSDS692"
+log_dir="${class_dir}/Practicum/log"
+scripts_dir="${class_dir}/Practicum/scripts.3"
+
+#=======================================
+# Files
+#=======================================
+get_cryptocurrencies="${scripts_dir}/01-coinmarketcap-get_cryptocurrencies"
+get_prices="${scripts_dir}/02-coinmarketcap-get_prices"
+get_sentiments="${scripts_dir}/03-twitter-get_sentiments"
+
+log_file="${log_dir}/create_all_csv_files.log.${date_time}"
+
+#-------------------------------------------------------------------------------
+#                                 FUNCTIONS
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+# Function    : create_all_csv_files
+#
+# Arguments   : None
+#
+# Return Value: Integer - Exit status
+#
+# Description : Create all data csv files.
+#
+# Notes       : This function calls all the scripts that generate csv data 
+#               files to imported in SQLite database.
+#
+#-------------------------------------------------------------------------------
+function create_all_csv_files
+{
+  #=====================================
+  # Local variables
+  #=====================================
+  local status=0
+
+  # Create cryptocurrencies data csv file.
+  ${get_cryptocurrencies}
+  status=$?
+  if [[ ${status} -ne 0 ]]; then
+    echo "${get_cryptocurrencies}: Error detected while creating cryptocurrencies data csv file."
+    return ${status}
+  fi
+
+  # Create prices data csv file.
+  ${get_prices}
+  status=$?
+  if [[ ${status} -ne 0 ]]; then
+    echo "${get_prices}: Error detected while creating prices data csv file."
+    return ${status}
+  fi
+
+  # Create sentiments data csv file.
+  ${get_sentiments}
+  status=$?
+  if [[ ${status} -ne 0 ]]; then
+    echo "${get_sentiments}: Error detected while creating sentiments data csv file."
+    return ${status}
+  fi
+
+  #=====================================
+  # Return
+  #=====================================
+  echo ${status}
+}
+
+#-------------------------------------------------------------------------------
+# Function    : main
+#
+# Arguments   : None
+#
+# Return Value: Integer - Exit status
+#
+# Description : Control function.
+#
+# Notes       :
+#
+#-------------------------------------------------------------------------------
+function main
+{
+  #=====================================
+  # Local variables
+  #=====================================
+  local status=0
+
+  echo "Executing scripts that create cryptocurrencies, prices and sentiments data csv files."
+  create_all_csv_files > ${log_file} 2>&1
+  status=$?
+  if [[ ${status} -ne 0 ]]; then
+    echo "Detected error while executing create_all_csv_files function."
+    exit ${status}
+  fi
+
+  #=====================================
+  # Return
+  #=====================================
+  echo ${status}
+}
+
+#-------------------------------------------------------------------------------
+#                                    MAIN
+#-------------------------------------------------------------------------------
+#=======================================
+# Run program
+#=======================================
+main
+
+status=$?
+
+#=======================================
+#  Exit program with exit status.
+#=======================================
+exit ${status}
+
+
+
+#-------------------------------------------------------------------------------
+#                                EXAMPLE RUNS
+#-------------------------------------------------------------------------------
+
+
+
+
+
+#-------------------------------------------------------------------------------
+#                                 REFERENCES
+#-------------------------------------------------------------------------------
+
